@@ -114,7 +114,6 @@ int main(int argc, char **argv)
 }
 
 
-// Set up OpenGL. For viewport and projection setup see reshape(). */
 void initOpenGL(int w, int h)
 {
     // Set up and enable lighting
@@ -165,6 +164,7 @@ void initOpenGL(int w, int h)
 
 }
 
+
 void timer(int value) {
 	if (isON)
 		if (direction == 1)
@@ -176,11 +176,13 @@ void timer(int value) {
 	glutPostRedisplay();
 }
 
+
 void assignColor(GLfloat col[3], GLfloat r, GLfloat g, GLfloat b) {
 	col[0] = r;
 	col[1] = g;
 	col[2] = b;
 }
+
 
 void makeTextureMap()
 {
@@ -196,6 +198,7 @@ void makeTextureMap()
 			assignColor(textureMap2[i][j], 0.500 + range, 0.0, 0.0);
 		}
 }
+
 
 void makeTextures()
 {
@@ -257,9 +260,11 @@ void display(void)
     glutSwapBuffers();   // Double buffering, swap buffers
 }
 
+
 void drawSub(void) {
 	drawBody();
 }
+
 
 void drawBody(void) {
 
@@ -273,6 +278,7 @@ void drawBody(void) {
 	glPopMatrix();
 }
 
+
 void drawPropeller(void) {
 
 	glPushMatrix();
@@ -284,6 +290,7 @@ void drawPropeller(void) {
 	glPopMatrix();
 }
 
+
 void drawPropellerCover(void) {
 
 	glPushMatrix();
@@ -294,6 +301,7 @@ void drawPropellerCover(void) {
 	glutSolidTorus(0.3, 1.5, 10, 50);
 	glPopMatrix();
 }
+
 
 void drawTower(void) {
 
@@ -308,6 +316,7 @@ void drawTower(void) {
 
 }
 
+
 void drawFins(void)
 {
 	glPushMatrix();
@@ -319,7 +328,7 @@ void drawFins(void)
 	glPopMatrix();
 }
 
-// Callback, called at initialization and whenever user resizes the window.
+
 void reshape(int w, int h)
 {
     // Set up viewport, projection, then change to modelview matrix mode - 
@@ -336,7 +345,7 @@ void reshape(int w, int h)
     gluLookAt(0.0, 6.0, 22.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
-// Callback, handles input from the keyboard, non-arrow keys
+
 void keyboard(unsigned char key, int x, int y)
 {
 	if (key == 's')
@@ -356,7 +365,7 @@ void keyboard(unsigned char key, int x, int y)
 	glutPostRedisplay();   // Trigger a window redisplay
 }
 
-// Callback, handles input from the keyboard, function and arrow keys
+
 void functionKeys(int key, int x, int y)
 {
 
@@ -373,11 +382,12 @@ void functionKeys(int key, int x, int y)
 	glutPostRedisplay();   // Trigger a window redisplay
 }
 
+
 void instructions(void) {
 	printf(" Controls: \n Up: Up arrow key \n Down: Down arrow key \n Rotate right: Right arrow key \n Rotate left: Left arrow key \n Forward: 'f' \n Backward: 'b' \n Toggle propeller: 's' \n");
 }
 
-// Mouse button callback - use only if you want to 
+
 void mouse(int button, int state, int x, int y)
 {
     currentButton = button;
@@ -405,7 +415,6 @@ void mouse(int button, int state, int x, int y)
 }
 
 
-// Mouse motion callback - use only if you want to 
 void mouseMotionHandler(int xMouse, int yMouse)
 {
     if (currentButton == GLUT_LEFT_BUTTON)
