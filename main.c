@@ -12,7 +12,7 @@
 
 # define M_PI 3.14159265358979323846
 
-const int meshSize = 32;    // Default Mesh Size
+const int meshSize = 128;    // Default Mesh Size
 const int vWidth = 650;     // Viewport width in pixels
 const int vHeight = 500;    // Viewport height in pixels
 
@@ -21,16 +21,22 @@ static unsigned char currentKey;
 
 static double xPos = 0.0;
 static double zPos = 0.0;
+static double rotate_degree = 0.0;
+static double enemyxPos = 10.0;
+static double enemyzPos = 10.0;
+static double enemy_rotate_degree = 0.0;
 static int isON = 0;
 static int direction = 1;
 static int currentButton;
 static unsigned char currentKey;
-static double rotate_degree = 0.0;
+static double rotate_degree_periscope = 0.0;
 static double prop_rotate_degree_update = 0.0;
 static double sub_motion_h = 0.0;
 static double sub_motion_v = 0.0;
 
 static bool periscope = false;
+
+
 // Light properties
 static GLfloat light_position0[] = { -6.0F, 12.0F, 0.0F, 1.0F };
 static GLfloat light_position1[] = { 6.0F, 12.0F, 0.0F, 1.0F };
@@ -53,7 +59,8 @@ static GLUquadricObj* tower;
 
 static GLfloat textureMap1[64][64][3];
 static GLfloat textureMap2[64][64][3];
-static GLuint tex[2];
+static GLfloat textureMap3[64][64][3];
+static GLuint tex[3];
 
 // Structure defining a bounding box, currently unused
 //struct BoundingBox {
@@ -72,6 +79,7 @@ void mouseMotionHandler(int xMouse, int yMouse);
 void keyboard(unsigned char key, int x, int y);
 void functionKeys(int key, int x, int y);
 void timer(int value);
+void enemyTimer(int value);
 void instructions(void);
 void assignColor(GLfloat col[3], GLfloat r, GLfloat g, GLfloat b);
 
@@ -105,6 +113,7 @@ int main(int argc, char **argv)
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(functionKeys);
 	glutTimerFunc(0, *timer, 0);
+	glutTimerFunc(0, *enemyTimer, 0);
 
     // Start event loop, never returns
     glutMainLoop();
@@ -141,12 +150,12 @@ void initOpenGL(int w, int h)
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);   // Nicer perspective
 
     // Set up ground quad mesh
-    Vector3D origin = NewVector3D(-32.0f, 0.0f, 32.0f);
+    Vector3D origin = NewVector3D(-128.0f, 0.0f, 128.0f);
 	quadMeshOrigin = origin;
     Vector3D dir1v = NewVector3D(1.0f, 0.0f, 0.0f);
     Vector3D dir2v = NewVector3D(0.0f, 0.0f, -1.0f);
     groundMesh = NewQuadMesh(meshSize);
-    InitMeshQM(&groundMesh, meshSize, origin, 64.0, 64.0, dir1v, dir2v);
+    InitMeshQM(&groundMesh, meshSize, origin, 256.0, 256.0, dir1v, dir2v);
 
     Vector3D ambient = NewVector3D(0.0f, 0.0f, 0.0f);
     Vector3D diffuse = NewVector3D(0.8f, 0.8f, 0.8f);
@@ -175,6 +184,71 @@ void timer(int value) {
 	glutPostRedisplay();
 }
 
+void enemyTimer(int value) {
+
+	int rotate = (rand() % 2 + 0);
+	int move = (rand() % 10 + 0);
+
+	switch (move)
+	{
+	case 0:
+		switch (rotate)
+		{
+		case 0:
+			for (int i = 0; i < 100; i++)
+			enemy_rotate_degree += 0.3;
+			break;
+		case 1:
+			for (int i = 0; i < 3; i++)
+			enemy_rotate_degree -= 0.3;
+			break;
+		default:
+			break;
+		}
+		break;
+	case 1: 
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 2:
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 3:
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 4:
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 5:
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 6:
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 7:
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 8: 
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	case 9:
+		enemyxPos -= (0.2) * cosf((-enemy_rotate_degree * M_PI) / 180);
+		enemyzPos -= (0.2) * sinf((-enemy_rotate_degree * M_PI) / 180);
+		break;
+	default:
+		break;
+	}
+	glutTimerFunc(8, *enemyTimer, 0);
+	glutPostRedisplay();
+}
+
 
 void assignColor(GLfloat col[3], GLfloat r, GLfloat g, GLfloat b) {
 	col[0] = r;
@@ -194,7 +268,12 @@ void makeTextureMap()
 	for (int i = 0; i < 64; i++)
 		for (int j = 0; j < 64; j++) {
 			range = ((double)(rand() % 200 + -100) / (double)1000);
-			assignColor(textureMap2[i][j], 0.500 + range, 0.0, 0.0);
+			assignColor(textureMap2[i][j], 0.0, 0.500 + range, 0.0);
+		}
+	for (int i = 0; i < 64; i++)
+		for (int j = 0; j < 64; j++) {
+			range = ((double)(rand() % 200 + -100) / (double)1000);
+			assignColor(textureMap3[i][j], 0.500 + range, 0.0, 0.0);
 		}
 }
 
@@ -222,6 +301,15 @@ void makeTextures()
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 64, 64, 0, GL_RGB, GL_FLOAT, textureMap2);
 
+	//Texture mapping for the Player submarine
+	glBindTexture(GL_TEXTURE_2D, tex[2]);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 64, 64, 0, GL_RGB, GL_FLOAT, textureMap3);
+
 }
 
 
@@ -235,7 +323,8 @@ void display(void)
 		gluLookAt(0.0, 12.0, 40.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	}
 	else {
-		gluLookAt(xPos+3, sub_motion_v + 7.0, zPos, xPos - 5, sub_motion_v + 6.0, 0.0, 0.0, 1.0, 0.0);
+			glRotatef(-rotate_degree_periscope, 0.0, 1.0, 0.0);
+			gluLookAt(xPos + 2.5, sub_motion_v + 7.0, zPos, xPos, sub_motion_v + 7.0, zPos, 0.0, 1.0, 0.0);
 	}
 	glEnable(GL_TEXTURE_GEN_S);
 	glEnable(GL_TEXTURE_GEN_T);
@@ -258,6 +347,20 @@ void display(void)
 		drawSub();
 		glPopMatrix();
 	}
+
+	glBindTexture(GL_TEXTURE_2D, tex[2]);
+
+	if (enemyxPos >= 128 || enemyxPos <= -128 || enemyzPos >= 128 || enemyzPos <= -128)
+	{
+		enemyxPos = 0;
+		enemyzPos = 0;
+	}
+	glPushMatrix();
+	glTranslatef(enemyxPos, 4.0, enemyzPos);
+	glRotatef(enemy_rotate_degree, 0.0, 1.0, 0.0);
+	drawSub();
+	glPopMatrix();
+
 	glDisable(GL_TEXTURE_GEN_S);
 	glDisable(GL_TEXTURE_GEN_T);
 
@@ -293,7 +396,6 @@ void drawPropeller(void) {
 	glutSolidCube(2.0);
 	glPopMatrix();
 }
-
 
 void drawPropellerCover(void) {
 
@@ -341,7 +443,7 @@ void reshape(int w, int h)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0, (GLdouble)w / h, 0.2, 100.0);
+	gluPerspective(60.0, (GLdouble)w / h, 0.2, 100.0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -372,10 +474,18 @@ void keyboard(unsigned char key, int x, int y)
 void functionKeys(int key, int x, int y)
 {
 
-	if (key == GLUT_KEY_LEFT)
-		rotate_degree += 10;
-	else if (key == GLUT_KEY_RIGHT)
-		rotate_degree -= 10;
+	if (key == GLUT_KEY_LEFT) {
+		if(periscope)
+			rotate_degree_periscope += 10;
+		else
+			rotate_degree += 10;
+	}
+	else if (key == GLUT_KEY_RIGHT) {
+		if (periscope)
+			rotate_degree_periscope -= 10;
+		else
+			rotate_degree -= 10;
+	}
 	else if (key == GLUT_KEY_UP)
 		sub_motion_v += 0.5;
 	else if (key == GLUT_KEY_DOWN)
