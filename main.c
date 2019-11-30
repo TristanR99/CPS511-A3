@@ -30,8 +30,7 @@ static double prop_rotate_degree_update = 0.0;
 static double sub_motion_h = 0.0;
 static double sub_motion_v = 0.0;
 
-// Lighting/shading and material properties for drone - upcoming lecture - just copy for now
-
+static bool periscope = false;
 // Light properties
 static GLfloat light_position0[] = { -6.0F, 12.0F, 0.0F, 1.0F };
 static GLfloat light_position1[] = { 6.0F, 12.0F, 0.0F, 1.0F };
@@ -150,7 +149,7 @@ void initOpenGL(int w, int h)
     InitMeshQM(&groundMesh, meshSize, origin, 64.0, 64.0, dir1v, dir2v);
 
     Vector3D ambient = NewVector3D(0.0f, 0.0f, 0.0f);
-    Vector3D diffuse = NewVector3D(0.4f, 0.8f, 0.4f);
+    Vector3D diffuse = NewVector3D(0.8f, 0.8f, 0.8f);
     Vector3D specular = NewVector3D(0.04f, 0.04f, 0.04f);
     SetMaterialQM(&groundMesh, ambient, diffuse, specular, 0.2);
 
@@ -231,8 +230,13 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLoadIdentity();
-	gluLookAt(0.0, 12.0, 40.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	
+
+	if (!periscope) {
+		gluLookAt(0.0, 12.0, 40.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	}
+	else {
+		gluLookAt(xPos+3, sub_motion_v + 7.0, zPos, xPos - 5, sub_motion_v + 6.0, 0.0, 0.0, 1.0, 0.0);
+	}
 	glEnable(GL_TEXTURE_GEN_S);
 	glEnable(GL_TEXTURE_GEN_T);
 	glBindTexture(GL_TEXTURE_2D, tex[0]);
@@ -351,16 +355,15 @@ void keyboard(unsigned char key, int x, int y)
 	if (key == 's')
 		isON = !isON;
 	else if (key == 'f') {
-		direction = 1;
-		sub_motion_h -= 0.5;
 		xPos -= cosf((-rotate_degree * M_PI) / 180);
 		zPos -= sinf((-rotate_degree * M_PI) / 180);
 	}
 	else if (key == 'b') {
-		direction = -1;
-		sub_motion_h += 0.5;
 		xPos += cosf((-rotate_degree * M_PI) / 180);
 		zPos += sinf((-rotate_degree * M_PI) / 180);
+	}
+	else if (key == 'p') {
+		periscope = !periscope;
 	}
 	glutPostRedisplay();   // Trigger a window redisplay
 }
